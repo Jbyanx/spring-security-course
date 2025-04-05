@@ -22,14 +22,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@Log4j2
 public class AuthenticationService {
     private final UserService userService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
 
-    public AuthenticationService(UserService userService, JwtService jwtService, AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public AuthenticationService(
+            UserService userService, JwtService jwtService,
+            AuthenticationManager authenticationManager, UserRepository userRepository) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -73,13 +74,10 @@ public class AuthenticationService {
     }
 
     public Boolean validateToken(String token) {
-        try{
-            jwtService.extractUsername(token);
-            return true;
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return false;
-        }
+        String username = jwtService.extractUsername(token);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UserNotFoundException("user not found validating token, username: "+username));
+        return jwtService.isValid(token, user);
     }
 
     public User findAuthenticatedUser() {

@@ -13,10 +13,10 @@ public enum Role {
                     RolePermission.DISABLE_ONE_PRODUCT,
 
                     RolePermission.READ_ALL_CATEGORIES,
-                    RolePermission.READ_ONE_CATEGORIES,
-                    RolePermission.CREATE_ONE_CATEGRIES,
-                    RolePermission.UPDATE_ONE_CATEGORIES,
-                    RolePermission.DISABLE_ONE_CATEGORIES,
+                    RolePermission.READ_ONE_CATEGORY,
+                    RolePermission.CREATE_ONE_CATEGORY,
+                    RolePermission.UPDATE_ONE_CATEGORY,
+                    RolePermission.DISABLE_ONE_CATEGORY,
 
                     RolePermission.READ_MY_PROFILE
             )
@@ -28,8 +28,8 @@ public enum Role {
                     RolePermission.UPDATE_ONE_PRODUCT,
 
                     RolePermission.READ_ALL_CATEGORIES,
-                    RolePermission.READ_ONE_CATEGORIES,
-                    RolePermission.UPDATE_ONE_CATEGORIES,
+                    RolePermission.READ_ONE_CATEGORY,
+                    RolePermission.UPDATE_ONE_CATEGORY,
 
                     RolePermission.READ_MY_PROFILE
             )

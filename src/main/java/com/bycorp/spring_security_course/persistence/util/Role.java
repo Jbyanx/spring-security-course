@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Role {
-    ROLE_ADMINISTRATOR(
+    ADMINISTRATOR(
             Arrays.asList(
                     RolePermission.READ_ALL_PRODUCTS,
                     RolePermission.READ_ONE_PRODUCT,
@@ -21,7 +21,7 @@ public enum Role {
                     RolePermission.READ_MY_PROFILE
             )
     ),
-    ROLE_ASSISTANT_ADMINISTRATOR(
+    ASSISTANT_ADMINISTRATOR(
             Arrays.asList(
                     RolePermission.READ_ALL_PRODUCTS,
                     RolePermission.READ_ONE_PRODUCT,
@@ -34,7 +34,7 @@ public enum Role {
                     RolePermission.READ_MY_PROFILE
             )
     ),
-    ROLE_CUSTOMER(
+    CUSTOMER(
             Arrays.asList(
                     RolePermission.READ_MY_PROFILE
             )

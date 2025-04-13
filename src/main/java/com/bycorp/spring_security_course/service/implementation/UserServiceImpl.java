@@ -42,6 +42,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    private void validatePassword(SaveUser newUser) {
+        if(!StringUtils.hasText(newUser.password()) || !StringUtils.hasText(newUser.repeatedPassword())) {
+            throw new InvalidPasswordException("Password do not match");
+        }
+        if (!newUser.password().equals(newUser.repeatedPassword())) {
+            throw new InvalidPasswordException("Password do not match");
+        }
+    }
+
     @Override
     public Optional<User> findOneByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -65,14 +74,5 @@ public class UserServiceImpl implements UserService {
         }
 
         return new PageImpl<>(getUsers, pageable, userList.getTotalElements());
-    }
-
-    private void validatePassword(SaveUser newUser) {
-        if(!StringUtils.hasText(newUser.password()) || !StringUtils.hasText(newUser.repeatedPassword())) {
-            throw new InvalidPasswordException("Password do not match");
-        }
-        if (!newUser.password().equals(newUser.repeatedPassword())) {
-            throw new InvalidPasswordException("Password do not match");
-        }
     }
 }

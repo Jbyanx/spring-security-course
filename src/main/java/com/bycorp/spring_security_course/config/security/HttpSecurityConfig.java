@@ -30,81 +30,20 @@ public class HttpSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(config -> config.disable()) //se usa es en statefull por eso lo deshabilitamos
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(daoAuthenticationProvider)
-//                .authorizeHttpRequests(authorizeRequests -> {
-//                    buildrequestMatcherv2(authorizeRequests);
-//                })
+                .authenticationProvider(daoAuthenticationProvider).authorizeHttpRequests(authorizeRequests -> {
+
+                    authorizeRequests
+                        .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/auth/validate").permitAll()
+                        .requestMatchers("/error").permitAll();
+
+                    authorizeRequests.anyRequest().authenticated();
+
+                })
 
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .build();
     }
 
-    private static void buildrequestMatcher(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizeRequests) {
-        /*
-         * Autorizacion de endpoints de productos
-         * */
-        authorizeRequests.requestMatchers(HttpMethod.GET, "/products")
-                .hasAnyRole(Role.ADMINISTRATOR.name(), Role.ASSISTANT_ADMINISTRATOR.name());
-
-        authorizeRequests.requestMatchers(HttpMethod.GET, "/products/{id}")
-                .hasAnyRole(Role.ADMINISTRATOR.name(), Role.ASSISTANT_ADMINISTRATOR.name());
-
-        authorizeRequests.requestMatchers(HttpMethod.POST, "/products")
-                .hasRole(Role.ADMINISTRATOR.name());
-
-        authorizeRequests.requestMatchers(HttpMethod.PUT, "/products/{id}")
-                .hasAnyRole(Role.ADMINISTRATOR.name(), Role.ASSISTANT_ADMINISTRATOR.name());
-
-        authorizeRequests.requestMatchers(HttpMethod.PUT, "/products/{id}/disable")
-                .hasRole(Role.ADMINISTRATOR.name());
-        /*
-         * Autorizacion de endpoints de categorias
-         * */
-        authorizeRequests.requestMatchers(HttpMethod.GET, "/categories")
-                .hasAnyRole(Role.ADMINISTRATOR.name(), Role.ASSISTANT_ADMINISTRATOR.name());
-
-        authorizeRequests.requestMatchers(HttpMethod.GET, "/categories/{id}")
-                .hasAnyRole(Role.ADMINISTRATOR.name(), Role.ASSISTANT_ADMINISTRATOR.name());
-
-        authorizeRequests.requestMatchers(HttpMethod.POST, "/categories")
-                .hasRole(Role.ADMINISTRATOR.name());
-
-        authorizeRequests.requestMatchers(HttpMethod.PUT, "/categories/{id}")
-                .hasAnyRole(Role.ADMINISTRATOR.name(), Role.ASSISTANT_ADMINISTRATOR.name());
-
-        authorizeRequests.requestMatchers(HttpMethod.PUT, "/products/{id}/disable")
-                .hasRole(Role.ADMINISTRATOR.name());
-
-        /*
-         * Autorizacion de endpoints del perfil
-         * */
-        authorizeRequests.requestMatchers(HttpMethod.GET, "/auth/profile")
-                .hasAnyRole(Role.ADMINISTRATOR.name(), Role.ASSISTANT_ADMINISTRATOR.name(),
-                        Role.CUSTOMER.name());
-
-        /*
-         * Autorizacion de endpoints de customer
-         * */
-        //SOLO A MODO DE PRUEBA TODO
-        authorizeRequests.requestMatchers(HttpMethod.GET, "/customers").permitAll();
-        authorizeRequests.requestMatchers(HttpMethod.POST, "/customers").permitAll();
-
-        //Autorizacion de endpoints publicos
-        authorizeRequests.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
-        authorizeRequests.requestMatchers(HttpMethod.GET,"/auth/validate").permitAll();
-        authorizeRequests.requestMatchers("/error").permitAll();
-
-        authorizeRequests.anyRequest().authenticated();
-    }
-
-
-    private static void buildrequestMatcherv2(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizeRequests) {
-        //Autorizacion de endpoints publicos
-        authorizeRequests.requestMatchers(HttpMethod.POST,"/auth/login").permitAll();
-        authorizeRequests.requestMatchers(HttpMethod.GET,"/auth/validate").permitAll();
-        authorizeRequests.requestMatchers("/error").permitAll();
-
-        authorizeRequests.anyRequest().authenticated();
-    }
 }

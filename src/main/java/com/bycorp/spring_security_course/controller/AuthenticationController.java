@@ -32,7 +32,7 @@ public class AuthenticationController {
 
     @GetMapping("/profile")
     public ResponseEntity<User> getAuthenticatedUser(){
-        User user = authenticationService.findAuthenticatedUser();
+        User user = authenticationService.getAuthenticatedUser();
         return ResponseEntity.ok(user);
     }
 }

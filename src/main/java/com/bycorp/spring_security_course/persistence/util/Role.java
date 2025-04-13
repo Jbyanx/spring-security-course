@@ -43,14 +43,15 @@ public enum Role {
     //cada Rol(esta enum) tiene una lista de permisos (la otra enum)
     private List<RolePermission> rolePermissions;
 
+    //este constructor permite que lo de arriba sea posible
     Role(List<RolePermission> rolePermissions) {
         this.rolePermissions = rolePermissions;
     }
-
+    //este es el getter de los permisos
     public List<RolePermission> getRolePermissions() {
         return rolePermissions;
     }
-
+    //este es el setter
     public void setRolePermissions(List<RolePermission> rolePermissions) {
         this.rolePermissions = rolePermissions;
     }

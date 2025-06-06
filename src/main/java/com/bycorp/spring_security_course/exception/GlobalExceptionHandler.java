@@ -1,7 +1,6 @@
 package com.bycorp.spring_security_course.exception;
 
 import com.bycorp.spring_security_course.dto.response.ApiError;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +15,6 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ApiError> handleExpiredJwtException(ExpiredJwtException ex){
-        log.error("ExpiredJwtException: {} ", ex.getMessage());
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new ApiError(
-                        "el token enviado expiro",
-                        HttpStatus.BAD_REQUEST.value(),
-                        ex.getMessage()
-                )
-        );
-    }
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex){
         log.error("HttpMessageNotReadableException: {} ", ex.getMessage());

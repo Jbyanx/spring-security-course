@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
@@ -35,10 +36,13 @@ public class User implements UserDetails {
         if(role.getRolePermissions() == null)
             return null;
 
-        return role.getRolePermissions().stream()
+        List<SimpleGrantedAuthority> authorityList = role.getRolePermissions().stream()
                 .map(r -> r.name())//sacar todos los permisos de cada rol, el nombre del permiso
                 .map(each -> new SimpleGrantedAuthority(each))//crear un simplegrantedauthority con cada uno
                 .collect(Collectors.toList());
+
+        authorityList.add(new SimpleGrantedAuthority("ROLE_"+this.getRole().name()));
+        return authorityList;
     }
 
     @Override

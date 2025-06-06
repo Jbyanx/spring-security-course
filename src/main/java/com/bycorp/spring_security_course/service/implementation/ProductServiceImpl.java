@@ -13,6 +13,7 @@ import com.bycorp.spring_security_course.service.ProductService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +30,8 @@ public class ProductServiceImpl implements ProductService {
         this.productMapper = productMapper;
     }
 
+
+    @PreAuthorize("hasAuthority('CREATE_ONE_PRODUCT')")
     @Override
     public GetProduct save(SaveProduct saveProduct) {
         // Buscar la categoría en la base de datos
@@ -42,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toGetProduct(productRepository.save(product));
     }
 
+    @PreAuthorize("hasAuthority('READ_ONE_PRODUCT')")
     @Override
     public GetProduct getById(Long id) {
         return productRepository.findById(id)
@@ -56,27 +60,30 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 
+    @PreAuthorize("hasAuthority('READ_ALL_PRODUCTS')")
     @Override
     public Page<GetProduct> getAll(Pageable pageable) {
         return productRepository.findAll(pageable).map(productMapper::toGetProduct);
     }
 
-    @Override
-    @Transactional
-    public GetProduct updateById(SaveProduct saveProduct, Long id) {
-        Product productDb = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
-
-        updateProduct(productDb, saveProduct);
-        return productMapper.toGetProduct(productRepository.save(productDb));
-    }
-
+    @PreAuthorize("hasAuthority('DISABLE_ONE_PRODUCT')")
     @Override
     public GetProduct disableById(Long id) {
         Product productDb = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
         productDb.setStatus(Product.ProductStatus.DISABLED);
+        return productMapper.toGetProduct(productRepository.save(productDb));
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasAuthority('UPDATE_ONE_PRODUCT')")
+    public GetProduct updateById(SaveProduct saveProduct, Long id) {
+        Product productDb = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+        updateProduct(productDb, saveProduct);
         return productMapper.toGetProduct(productRepository.save(productDb));
     }
 

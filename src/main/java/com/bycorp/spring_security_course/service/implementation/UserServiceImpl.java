@@ -10,6 +10,7 @@ import com.bycorp.spring_security_course.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -36,9 +37,18 @@ public class UserServiceImpl implements UserService {
         user.setName(newUser.name());
         user.setUsername(newUser.username());
         user.setPassword(passwordEncoder.encode(newUser.password()));
-        user.setRole(Role.ROLE_CUSTOMER);
+        user.setRole(Role.CUSTOMER);
 
         return userRepository.save(user);
+    }
+
+    private void validatePassword(SaveUser newUser) {
+        if(!StringUtils.hasText(newUser.password()) || !StringUtils.hasText(newUser.repeatedPassword())) {
+            throw new InvalidPasswordException("Password do not match");
+        }
+        if (!newUser.password().equals(newUser.repeatedPassword())) {
+            throw new InvalidPasswordException("Password do not match");
+        }
     }
 
     @Override
@@ -46,6 +56,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
+    @PreAuthorize("denyAll()")
     @Override
     public Page<GetUser> findAll(Pageable pageable) {
         int passwordReference = 123;
@@ -63,14 +74,5 @@ public class UserServiceImpl implements UserService {
         }
 
         return new PageImpl<>(getUsers, pageable, userList.getTotalElements());
-    }
-
-    private void validatePassword(SaveUser newUser) {
-        if(!StringUtils.hasText(newUser.password()) || !StringUtils.hasText(newUser.repeatedPassword())) {
-            throw new InvalidPasswordException("Password do not match");
-        }
-        if (!newUser.password().equals(newUser.repeatedPassword())) {
-            throw new InvalidPasswordException("Password do not match");
-        }
     }
 }

@@ -9,6 +9,7 @@ import com.bycorp.spring_security_course.persistence.repository.CategoryReposito
 import com.bycorp.spring_security_course.service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,12 +22,14 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryMapper = categoryMapper;
     }
 
+    @PreAuthorize("hasAuthority('READ_ALL_CATEGORIES')")
     @Override
     public Page<GetCategory> getAll(Pageable pageable) {
         return categoryRepository.findAll(pageable)
                 .map(categoryMapper::toGetCategory);
     }
 
+    @PreAuthorize("hasAuthority('READ_ONE_CATEGORY')")
     @Override
     public GetCategory getById(Long id) {
         return categoryRepository.findById(id)
@@ -34,6 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new CategoryNotFoundException("category not found"));
     }
 
+    @PreAuthorize("hasAuthority('CREATE_ONE_CATEGORY')")
     @Override
     public GetCategory save(SaveCategory saveCategory) {
         Category category = new Category();
@@ -43,6 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toGetCategory(categoryRepository.save(category));
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_ONE_CATEGORY')")
     @Override
     public GetCategory updateById(SaveCategory saveCategory, Long id) {
         Category category = categoryRepository.findById(id)
@@ -52,6 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toGetCategory(categoryRepository.save(category));
     }
 
+    @PreAuthorize("hasAuthority('DISABLE_ONE_CATEGORY')")
     @Override
     public GetCategory disableById(Long id) {
         Category category = categoryRepository.findById(id)

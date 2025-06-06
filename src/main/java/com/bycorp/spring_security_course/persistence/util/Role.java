@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Role {
-    ROLE_ADMINISTRATOR(
+    ADMINISTRATOR(
             Arrays.asList(
                     RolePermission.READ_ALL_PRODUCTS,
                     RolePermission.READ_ONE_PRODUCT,
@@ -13,28 +13,28 @@ public enum Role {
                     RolePermission.DISABLE_ONE_PRODUCT,
 
                     RolePermission.READ_ALL_CATEGORIES,
-                    RolePermission.READ_ONE_CATEGORIES,
-                    RolePermission.CREATE_ONE_CATEGRIES,
-                    RolePermission.UPDATE_ONE_CATEGORIES,
-                    RolePermission.DISABLE_ONE_CATEGORIES,
+                    RolePermission.READ_ONE_CATEGORY,
+                    RolePermission.CREATE_ONE_CATEGORY,
+                    RolePermission.UPDATE_ONE_CATEGORY,
+                    RolePermission.DISABLE_ONE_CATEGORY,
 
                     RolePermission.READ_MY_PROFILE
             )
     ),
-    ROLE_ASSISTANT_ADMINISTRATOR(
+    ASSISTANT_ADMINISTRATOR(
             Arrays.asList(
                     RolePermission.READ_ALL_PRODUCTS,
                     RolePermission.READ_ONE_PRODUCT,
                     RolePermission.UPDATE_ONE_PRODUCT,
 
                     RolePermission.READ_ALL_CATEGORIES,
-                    RolePermission.READ_ONE_CATEGORIES,
-                    RolePermission.UPDATE_ONE_CATEGORIES,
+                    RolePermission.READ_ONE_CATEGORY,
+                    RolePermission.UPDATE_ONE_CATEGORY,
 
                     RolePermission.READ_MY_PROFILE
             )
     ),
-    ROLE_CUSTOMER(
+    CUSTOMER(
             Arrays.asList(
                     RolePermission.READ_MY_PROFILE
             )
@@ -43,14 +43,15 @@ public enum Role {
     //cada Rol(esta enum) tiene una lista de permisos (la otra enum)
     private List<RolePermission> rolePermissions;
 
+    //este constructor permite que lo de arriba sea posible
     Role(List<RolePermission> rolePermissions) {
         this.rolePermissions = rolePermissions;
     }
-
+    //este es el getter de los permisos
     public List<RolePermission> getRolePermissions() {
         return rolePermissions;
     }
-
+    //este es el setter
     public void setRolePermissions(List<RolePermission> rolePermissions) {
         this.rolePermissions = rolePermissions;
     }

@@ -9,7 +9,7 @@ import com.bycorp.spring_security_course.persistence.entity.User;
 import com.bycorp.spring_security_course.persistence.repository.UserRepository;
 import com.bycorp.spring_security_course.service.UserService;
 import jakarta.validation.Valid;
-import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +36,15 @@ public class AuthenticationService {
         this.userRepository = userRepository;
     }
 
+    private Map<String, Object> generateExtraClaims(User user) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("name", user.getName());
+        extraClaims.put("role", user.getRole().name());
+        extraClaims.put("authorities", user.getAuthorities());
+        return extraClaims;
+    }
+
+    @PreAuthorize("permitAll()")
     public RegisteredUser registerOneCustomer(@Valid SaveUser newUser) {
         User user = userService.registerOneCustomer(newUser);
 
@@ -52,14 +60,7 @@ public class AuthenticationService {
         return userDto;
     }
 
-    private Map<String, Object> generateExtraClaims(User user) {
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("name", user.getName());
-        extraClaims.put("role", user.getRole().name());
-        extraClaims.put("authorities", user.getAuthorities());
-        return extraClaims;
-    }
-
+    @PreAuthorize("permitAll()")
     public AuthenticationResponse login(@Valid AuthenticationRequest authenticationRequest) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 authenticationRequest.username(),
@@ -73,6 +74,7 @@ public class AuthenticationService {
         return new AuthenticationResponse(jwt);
     }
 
+    @PreAuthorize("permitAll()")
     public Boolean validateToken(String token) {
         String username = jwtService.extractUsername(token);
         User user = userRepository.findByUsername(username)
@@ -80,7 +82,8 @@ public class AuthenticationService {
         return jwtService.isValid(token, user);
     }
 
-    public User findAuthenticatedUser() {
+    @PreAuthorize("hasAuthority('READ_MY_PROFILE')")
+    public User getAuthenticatedUser() {
         UsernamePasswordAuthenticationToken auth =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 

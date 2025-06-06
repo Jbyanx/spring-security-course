@@ -36,6 +36,14 @@ public class AuthenticationService {
         this.userRepository = userRepository;
     }
 
+    private Map<String, Object> generateExtraClaims(User user) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("name", user.getName());
+        extraClaims.put("role", user.getRole().name());
+        extraClaims.put("authorities", user.getAuthorities());
+        return extraClaims;
+    }
+
     @PreAuthorize("permitAll()")
     public RegisteredUser registerOneCustomer(@Valid SaveUser newUser) {
         User user = userService.registerOneCustomer(newUser);
@@ -50,14 +58,6 @@ public class AuthenticationService {
                 jwt
         );
         return userDto;
-    }
-
-    private Map<String, Object> generateExtraClaims(User user) {
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("name", user.getName());
-        extraClaims.put("role", user.getRole().name());
-        extraClaims.put("authorities", user.getAuthorities());
-        return extraClaims;
     }
 
     @PreAuthorize("permitAll()")

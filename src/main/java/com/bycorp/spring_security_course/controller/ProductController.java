@@ -2,12 +2,14 @@ package com.bycorp.spring_security_course.controller;
 
 import com.bycorp.spring_security_course.dto.request.SaveProduct;
 import com.bycorp.spring_security_course.dto.response.GetProduct;
+import com.bycorp.spring_security_course.persistence.util.RolePermission;
 import com.bycorp.spring_security_course.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

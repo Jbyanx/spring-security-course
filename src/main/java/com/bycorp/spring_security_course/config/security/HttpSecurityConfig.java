@@ -35,8 +35,7 @@ public class HttpSecurityConfig {
                 .authenticationProvider(daoAuthenticationProvider).authorizeHttpRequests(authorizeRequests -> {
 
                     authorizeRequests
-                        .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/auth/validate").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
                         .requestMatchers("/error").permitAll();
 
                     authorizeRequests.anyRequest().authenticated();

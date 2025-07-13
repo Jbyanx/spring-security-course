@@ -1,7 +1,10 @@
 package com.bycorp.spring_security_course.config.security.filter;
 
+import com.bycorp.spring_security_course.persistence.entity.JwtToken;
+import com.bycorp.spring_security_course.persistence.repository.JwtTokenRepository;
 import com.bycorp.spring_security_course.service.UserService;
 import com.bycorp.spring_security_course.service.auth.JwtService;
+import com.fasterxml.jackson.databind.DatabindContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,8 +22,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -28,27 +33,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserService userService;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final JwtTokenRepository jwtTokenRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService, UserService userService) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserService userService, JwtTokenRepository jwtTokenRepository) {
         this.jwtService = jwtService;
         this.userService = userService;
+        this.jwtTokenRepository = jwtTokenRepository;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("entro el el filtro JwtAuthenticationfilter");
+        //obtener authorization header
+        String jwt = jwtService.extractJwtFromRequest(request);
 
-        //1. Obtener encabezado http Authorization
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if (!StringUtils.hasText(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")) {
+        //obtener token
+        if(jwt == null || !StringUtils.hasText(jwt)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        //2. Obtener jwt desde el encabezado
-        String jwt = authorizationHeader.substring(7);
+        //2.1 Obtener token no expirado y valido desde DB
+        Optional<JwtToken> token = jwtTokenRepository.findByToken(jwt);
+        boolean isValid = validateToken(token);
+
+        if(!isValid){
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
             //3. Obtener el subject/username desde el token, esta acción a su vez valida el token
@@ -92,6 +104,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     "Error procesando la autenticación.");
             return;
         }
+    }
+
+    private boolean validateToken(Optional<JwtToken> token) {
+        if(!token.isPresent()) {
+            System.out.println("token no existe o no fue generado en nuestro sistema");
+            return false;
+        }
+
+        JwtToken jwtToken = token.get();
+        Date now = new Date(System.currentTimeMillis());
+        boolean isValid = jwtToken.isValid() && jwtToken.getExpiration().after(now);
+        if(!isValid) {
+            System.out.println("Token invalido o no fue creado en nuestro sistema");
+            updateTokenStatus(jwtToken);
+        }
+        return isValid;
+    }
+
+    private void updateTokenStatus(JwtToken jwtToken) {
+        jwtToken.setValid(false);
+        jwtTokenRepository.save(jwtToken);
     }
 
     private void sendErrorResponse(HttpServletResponse response,

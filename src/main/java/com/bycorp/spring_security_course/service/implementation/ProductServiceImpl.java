@@ -62,6 +62,7 @@ public class ProductServiceImpl implements ProductService {
 
     @PreAuthorize("hasAuthority('READ_ALL_PRODUCTS')")
     @Override
+    @Transactional
     public Page<GetProduct> getAll(Pageable pageable) {
         return productRepository.findAll(pageable).map(productMapper::toGetProduct);
     }

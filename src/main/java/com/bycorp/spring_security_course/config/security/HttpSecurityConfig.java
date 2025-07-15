@@ -35,7 +35,7 @@ public class HttpSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationEntryPoint authenticationEntryPoint, AccessDeniedHandler accessDeniedHandler) throws Exception {
         return http
-                .cors(cord -> {})
+                .cors(cors -> {})
                 .csrf(config -> config.disable()) //se usa es en statefull por eso lo deshabilitamos
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(daoAuthenticationProvider).authorizeHttpRequests(authorizeRequests -> {
@@ -68,7 +68,7 @@ public class HttpSecurityConfig {
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration); //patron de controladores (en este caso todos)
         return source;
     }
 }

@@ -39,10 +39,12 @@ dependencies {
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
 	runtimeOnly("com.h2database:h2")
+
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6") // or 'io.jsonwebtoken:jjwt-gson:0.12.6' for gson
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	runtimeOnly("org.postgresql:postgresql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

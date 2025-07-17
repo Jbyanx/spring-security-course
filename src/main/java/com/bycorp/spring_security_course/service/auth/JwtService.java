@@ -5,10 +5,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.security.cert.X509CertSelector;
@@ -58,5 +60,21 @@ public class JwtService {
 
     public boolean isValid(String token, User user){
         return user.getUsername().equals(extractUsername(token));
+    }
+
+    public String extractJwtFromRequest(HttpServletRequest request) {
+        //1. Obtener encabezado http Authorization
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (!StringUtils.hasText(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")) {
+            return null;
+        }
+
+        //retornar el jwt
+        return authorizationHeader.substring(7);
+    }
+
+    public Date extractExpiration(String jwt) {
+        return extractAllClaims(jwt).getExpiration();
     }
 }

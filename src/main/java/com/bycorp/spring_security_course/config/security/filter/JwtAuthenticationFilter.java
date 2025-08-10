@@ -1,10 +1,9 @@
 package com.bycorp.spring_security_course.config.security.filter;
 
-import com.bycorp.spring_security_course.persistence.entity.JwtToken;
+import com.bycorp.spring_security_course.persistence.entity.security.JwtToken;
 import com.bycorp.spring_security_course.persistence.repository.JwtTokenRepository;
 import com.bycorp.spring_security_course.service.UserService;
 import com.bycorp.spring_security_course.service.auth.JwtService;
-import com.fasterxml.jackson.databind.DatabindContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,6 +1,6 @@
 package com.bycorp.spring_security_course.persistence.repository;
 
-import com.bycorp.spring_security_course.persistence.entity.User;
+import com.bycorp.spring_security_course.persistence.entity.security.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.bycorp.spring_security_course.persistence.entity;
+package com.bycorp.spring_security_course.persistence.entity.security;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:15
+    container_name: datasource-postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - spring-net
+  app:
+    build: .
+    image: springboot-app:v1
+    container_name: springboot-app
+    depends_on:
+      - db
+    ports:
+      - "8585:9191" # expuesto - interno
+    env_file:
+      - .env
+    networks:
+      - spring-net
+volumes:
+  pgdata:
+networks:
+  spring-net:
+    driver: bridge

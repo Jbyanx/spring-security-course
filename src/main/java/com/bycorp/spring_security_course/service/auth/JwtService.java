@@ -1,6 +1,6 @@
 package com.bycorp.spring_security_course.service.auth;
 
-import com.bycorp.spring_security_course.persistence.entity.User;
+import com.bycorp.spring_security_course.persistence.entity.security.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
-import java.security.cert.X509CertSelector;
 import java.util.Date;
 import java.util.Map;
 

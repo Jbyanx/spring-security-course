@@ -3,7 +3,7 @@ package com.bycorp.spring_security_course.controller;
 import com.bycorp.spring_security_course.dto.auth.AuthenticationRequest;
 import com.bycorp.spring_security_course.dto.auth.AuthenticationResponse;
 import com.bycorp.spring_security_course.dto.response.LogoutResponse;
-import com.bycorp.spring_security_course.persistence.entity.User;
+import com.bycorp.spring_security_course.persistence.entity.security.User;
 import com.bycorp.spring_security_course.service.auth.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

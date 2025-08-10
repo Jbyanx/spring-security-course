@@ -1,4 +1,4 @@
-package com.bycorp.spring_security_course.persistence.entity;
+package com.bycorp.spring_security_course.persistence.entity.security;
 
 import com.bycorp.spring_security_course.persistence.util.Role;
 import jakarta.persistence.*;
